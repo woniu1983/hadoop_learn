@@ -300,6 +300,15 @@
 ------------------------------------------------------------------------
 
 ## 八. 测试WordCount程序
+
+        # cd /opt/test/hadoop-2.6.5/share/hadoop/mapreduce/
+        # hdfs dfs -mkdir test
+        # hdfs dfs -put test.txt /test
+        # hadoop jar hadoop-mapreduce-examples-2.6.5.jar wordcount /test/test.txt /output
+
+        >> 等待执行完毕， 查看输出结果
+        # hdfs dfs -text /output/part-*
+
 ------------------------------------------------------------------------
 
 
