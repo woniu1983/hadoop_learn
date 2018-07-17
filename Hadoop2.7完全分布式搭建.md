@@ -72,6 +72,12 @@
 
         >>> Windows宿主机上同样追加：C:/windows/system32/driver/etc/hosts    
 
+    > `关闭防火墙和SELinux`
+
+        #systemctl start firewalld.service    #启动firewall 
+        #systemctl stop firewalld.service     #停止firewall 
+        #systemctl disable firewalld.service  #禁止firewall开机启动
+
 * 安装sz rz文件传输工具
 
         #sudo yum install lrzsz
