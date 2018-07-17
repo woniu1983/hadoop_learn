@@ -87,6 +87,7 @@
         #sudo tar -zxvf jdk-*** -C /opt/
         #cd /opt/
         #sudo mv jdk*** java
+        #sudo chown -R hadoop:hadoop ./java        # 修改文件权限， hadoop:hadoop清修改为当前用户名和组名
 
 * Java环境变量设置
 
@@ -107,7 +108,7 @@
         #sudo tar -zxvf ~/下载/hadoop-2.7.0.tar.gz -C /opt/ 
         #cd /opt
         #sudo mv ./hadoop-2.7.0/ ./hadoop            # 将文件夹名改为hadoop
-        #sudo chown -R hadoop:hadoop ./hadoop        # 修改文件权限， hadoop:hadoop清修改为当前用户名
+        #sudo chown -R hadoop:hadoop ./hadoop        # 修改文件权限， hadoop:hadoop清修改为当前用户名和组名
         #cd /opt/hadoop
         #./bin/hadoop version						 # 查看版本
 
@@ -147,37 +148,153 @@
 ------------------------------------------------------------------------
 
 ## 五. 免密登录配置 
+*  在3台机器上创建密钥
+
+        #ssh-keygen -t rsa    ###全部回车执行完毕
+
+* 在3台机器上执行如下命令，将公钥集中到ha11机器上的~/.ssh/authorized_keys
+
+        #ssh-copy-id -i ~/.ssh/id_rsa.pub ha11.woniu.com
+
+* 在ha11机器上把~/.ssh/authorized_keys复制到ha22和ha33上
+
+        #scp ~/.ssh/authorized_keys ha22.woniu.com:~/.ssh/
+        #scp ~/.ssh/authorized_keys ha33.woniu.com:~/.ssh/
+
+        #scp ~/.ssh/known_hosts ha22.woniu.com:~/.ssh/
+        #scp ~/.ssh/known_hosts ha22.woniu.com:~/.ssh/
 ------------------------------------------------------------------------
 
 ## 六. 完全分布式配置
+
+### 0. /opt/hadoop/etc/hadoop/hadoop-env.sh
+
+        #vi /opt/hadoop/etc/hadoop/hadoop-env.sh
+        >>> 设置JAVA_HOME
+        export JAVA_HOME=/opt/java
+
+### 1. /opt/hadoop/etc/hadoop/core-site.xml
+
+        <configuration>
+                <property>
+                        <name>fs.defaultFS</name>
+                        <value>hdfs://ha11.woniu.com:9000</value>
+                </property>
+                <!-- 指定hadoop临时目录,自行创建 -->
+                <property>
+                        <name>hadoop.tmp.dir</name>
+                        <value>/opt/data/full/hadoop</value>
+                </property>
+        </configuration>
+
+### 2. /opt/hadoop/etc/hadoop/hdfs-site.xml
+
+        <configuration>
+	        <!-- 将备份数修改为2，小于等于当前datanode数目即可-->
+                <property>
+                        <name>dfs.replication</name>
+                        <value>2</value>
+                </property>
+                        <!-- 将secondary namenode改为hadoop2-->
+                <property>
+                        <name>dfs.namenode.secondary.http-address</name>
+                        <value>ha22.woniu.com:50090</value>
+                </property>
+	        <property>
+                        <name>dfs.namenode.name.dir</name>
+		        <value>file://${hadoop.tmp.dir}/dfs/name</value>
+	        </property>
+	        <property>
+		        <name>dfs.namenode.data.dir</name>
+		        <value>file://${hadoop.tmp.dir}/dfs/data</value>
+	        </property>
+	        <property>
+                        <name>dfs.permissions.enabled</name>
+                        <value>false</value>
+	        </property>
+        </configuration>
+
+### 3. /opt/hadoop/etc/hadoop/yarn-site.xml
+
+        <configuration>
+                <!-- 添加了yarn.resourcemanager.hostname 属性-->
+                <property>
+                        <name>yarn.resourcemanager.hostname</name>
+                        <value>ha11.woniu.com</value>
+                </property>
+                
+                <property>  
+                        <name>yarn.nodemanager.aux-services</name>  
+                        <value>mapreduce_shuffle</value>  
+                </property>  
+                <!-- 添加了yarn.nodemanager.auxservices.mapreduce.shuffle.class属性-->
+                <property>
+                        <name>yarn.nodemanager.auxservices.mapreduce.shuffle.class</name>
+                        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+                </property>
+        </configuration>
+
+
+### 4. /opt/hadoop/etc/hadoop/mapred-site.xml
+
+        <configuration>
+                <property>
+                        <name>mapreduce.framework.name</name>
+                        <value>yarn</value>
+                </property>
+                <property>
+                        <name>mapreduce.jobhistory.address</name>
+                        <value>ha11.woniu.com:10020</value>
+                </property>
+                <property>
+                        <name>mapreduce.jobhistory.address</name>
+                        <value>ha11.woniu.com:19888</value>
+                </property>
+        </configuration>
+
+### 5. /opt/hadoop/etc/hadoop/slaves
+        ## DataNode节点， 输入如下
+
+        ha22.woniu.com
+        ha33.woniu.com
+
+
+### 6. 分发hadoop配置到所有节点
+
+        #cd /opt/hadoop/etc/hadoop
+        #scp hadoop-env.sh core-site.xml hdfs-site.xml yarn-site.xml mapred-site.xml slaves ha22.woniu.com:`pwd`
+        #scp hadoop-env.sh core-site.xml hdfs-site.xml yarn-site.xml mapred-site.xml slaves ha33.woniu.com:`pwd`
+
+
 ------------------------------------------------------------------------
 
 ## 七. 启动完全分布式Hadoop集群
+0. 创建hadoop tmp dir
+   
+        #cd /opt
+        #sudo mkdir -p ./data/full/hadoop/
+        #sudo chown -R hadoop:hadoop ./data
+
+1. 在ha11上重新格式化namenode
+
+        #hdfs namenode -format
+
+2. 在ha11上启动HDFS
+
+        #start-dfs.sh
+
+3. 在ha11上启动yarn
+
+        #start-yarn.sh
+
+4. 在各节点上查看进程
+
+        #jps
+
 ------------------------------------------------------------------------
 
 ## 八. 测试WordCount程序
 ------------------------------------------------------------------------
-
-
-## 配置免密码登录，生成各种密码文件
-```查看ssh状态，如果不存在则安装
-rpm -qa | grep ssh 
-sudo yum install openssh-clients
-sudo yum install openssh-server
-```
-
-```
-ssh localhost
-#### 此时会有如下提示(SSH首次登陆提示)，输入 yes 。
-#### 然后按提示输入密码 hadoop，这样就登陆到本机了。
-exit                           # 退出刚才的 ssh localhost
-cd ~/.ssh/                     # 若没有该目录，请先执行一次ssh localhost
-ssh-keygen -t rsa              # 会有提示，都按回车就可以
-cat id_rsa.pub >> authorized_keys  # 加入授权
-chmod 600 ./authorized_keys    # 修改文件权限
-#### 此时再用 ssh localhost 命令，无需输入密码就可以直接登陆了
-exit 
-```
 
 
 
