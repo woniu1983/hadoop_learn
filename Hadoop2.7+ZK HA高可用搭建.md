@@ -226,7 +226,8 @@
                 </property>
                 <!--设置自动切换-->
                 <property>
-                <name>dfs.ha.automatic-failover.enabled.mycluster</name>
+                <!--<name>dfs.ha.automatic-failover.enabled.mycluster</name>--> <!--start-dfs.sh 命令不识别mycluster-->
+                <name>dfs.ha.automatic-failover.enabled</name>
                 <value>true</value>
                 </property>
         </configuration>
@@ -246,12 +247,99 @@
 0. ha11,ha22,ha33 上分别启动zookeeper
    
         # zkServer.sh start
+        # zkServer.sh start
+        # zkServer.sh start
 
-1. dd
+        查看 
+        # zkServer.sh status
+        # jps
+
+1.  ha11,ha22,ha33 上启动journalnode, 奇数个, 且>=3
+
+        # hadoop-daemon.sh start journalnode
+        # hadoop-daemon.sh start journalnode
+        # hadoop-daemon.sh start journalnode
+
+        查看 
+        # jps
+
+2.  在ha11上格式化namenode
+
+        # hdfs namenode -format
+
+3.  在ha11上启动namenode
+        
+        # hadoop-daemon.sh start namenode
+        # jps
+
+4.  在ha22（另一台namenode）上同步ha11的CID等信息
+
+        # hdfs namenode -bootstrapStandby
+        # jps
+
+5.  在ha11上启动其他服务
+
+        # start-dfs.sh
+
+6.  在ha11上格式化zookeeper
+
+        # hdfs zkfc -formatZK
+
+7.  在所有namenode上（ha11, ha22）启动ZKFC
+
+        # hadoop-daemon.sh start zkfc
+
+7.  在ha11,ha22上使用zkCli.sh查看格式化结果
+
+        # zkCli.sh
+        # zkCli.sh
 
 ------------------------------------------------------------------------
 
-## 八. 测试WordCount程序
+##  八. 常规启动HA
+1.  启动zookeeper
+
+        >> ha11,ha22,ha33 上分别启动zookeeper
+        # zkServer.sh start
+        # zkServer.sh start
+        # zkServer.sh start
+
+2. 启动hdfs集群
+
+        >> 在ha11上启动整个集群start-dfs.sh
+        # start-dfs.sh        
+
+3. 启动yarn
+
+        >> 在ha11上启动yarn
+        # start-yarn.sh
+
+------------------------------------------------------------------------
+
+##  九. 停止HA + HADOOP
+> 下面是停止Hadoop的HA集群的流程：
+
+1. 第一步，在Ha11机器上停止HDFS：
+[root@hadoop01 ~]# sbin/stop-dfs.sh
+
+2. 第二步，在Ha11机器上停止YARN：
+[root@hadoop01 ~]# sbin/stop-yarn.sh
+
+3. 第三步，在Ha11机器上单独停止ResourceManager：
+[root@hadoop02 ~]# sbin/yarn-daemon.sh stop resourcemanager
+
+4. 第四步，在Ha11机器上停止Zookeeper：
+[root@hadoop01 ~]# zkServer.sh stop
+
+5. 第五步，在Ha22机器上停止Zookeeper：
+[root@hadoop02 ~]# zkServer.sh stop
+
+6. 第六步，在Ha33机器上停止Zookeeper：
+[root@hadoop03 ~]# zkServer.sh stop
+
+
+
+## 十. 测试WordCount程序
 
         # cd /opt/test/hadoop-2.6.5/share/hadoop/mapreduce/
         # hdfs dfs -mkdir test
