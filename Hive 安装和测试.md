@@ -71,9 +71,9 @@
 
 ### yum 方式安装
 * 获取 yum repository ： https://dev.mysql.com/downloads/repo/yum/
-        - 如果是CentOS7 x64的选择：Red Hat Enterprise Linux 7 / Oracle Linux 7 (Architecture Independent), RPM Package
-        - 可以手动下载，也可以在CentOS7上使用wget命令下载
-        - shell> wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+        >> 如果是CentOS7 x64的选择：Red Hat Enterprise Linux 7 / Oracle Linux 7 (Architecture Independent), RPM Package
+        >> 可以手动下载，也可以在CentOS7上使用wget命令下载
+        >> shell> wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
 * 更新yum repo
         | shell> sudo rpm -Uvh mysql80-community-release-el7-1.noarch.rpm 
         | shell> sudo yum repolist all | grep mysql  ###查询当前mysql的版本
