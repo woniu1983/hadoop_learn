@@ -13,7 +13,7 @@
         通过修改max_split_size和min_split_size来影响map的个数；
 
 
-#Hive并行执行
+# Hive并行执行
     针对有些互相没有依赖关系的独立的job，可以选择并发的执行job
     hive.exec.parallel
     hive.exec.parallel.thread.number
@@ -21,15 +21,15 @@
     根据实际的集群的状况和服务器的性能合理的设置线程数目
 
 
-#JVM重用
+# JVM重用
         MR默认jvm运行，开启JVM开启多个任务
         开启数目需测试
         mapreduce.job.jvm.numtasks
 
 
-========================================================================================
+============================================================
 
-#Hadoop/Hive压缩
+# Hadoop/Hive压缩
 * gzip/zlib/bzip2/lz4/snappy等
 
 * 首先看一下你的集群是否支持/安装了snappy
