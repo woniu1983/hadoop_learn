@@ -171,6 +171,7 @@
         ```
 * 先启动hadoop或者启动HA集群
 * 启动hive
+
         * Hive2.1的启动需要先执行schematool命令进行初始化， 
         * 否则执行hive下面的sql脚本会失败：Unable to instantiate org.apache.hadoop.hive.ql.metadata.SessionHiveMetaStoreClient
         > schematool -dbType mysql -initSchema 
