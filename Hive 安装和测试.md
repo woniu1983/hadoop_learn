@@ -72,9 +72,9 @@
 ### yum 方式安装
 * 获取 yum repository ： https://dev.mysql.com/downloads/repo/yum/ 
 
-        >> 如果是CentOS7 x64的选择：Red Hat Enterprise Linux 7 / Oracle Linux 7 (Architecture Independent), RPM Package
-        >> 可以手动下载，也可以在CentOS7上使用wget命令下载
-        >> shell> wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+        | 如果是CentOS7 x64的选择：Red Hat Enterprise Linux 7 / Oracle Linux 7 (Architecture Independent), RPM Package
+        | 可以手动下载，也可以在CentOS7上使用wget命令下载
+        | shell> wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
 * 更新yum repo
 
         | shell> sudo rpm -Uvh mysql80-community-release-el7-1.noarch.rpm 
@@ -100,15 +100,18 @@
                 mysql80-community-source           MySQL 8.0 Community Server - Sour 禁用
                 ```
 * 如果你需要使用的是5.x版本，禁用默认的mysql8
+
         | shell> sudo yum -y install yum-utils          ###安装yum的其他命令工具
         | shell> sudo yum-config-manager --disable mysql80-community
         | shell> sudo yum-config-manager --enable mysql57-community
         | shell> sudo yum repolist all | grep mysql  ###再次查询当前启用的mysql的版本
 
 * 开始安装MySQL 
+
         | shell> sudo yum install mysql-community-server
 
 * 查看安装结果
+
         shell> rpm -qa | grep mysql
                 mysql80-community-release-el7-1.noarch
                 mysql-community-common-5.7.23-1.el7.x86_64
@@ -118,10 +121,12 @@
                 mysql-community-libs-compat-5.7.23-1.el7.x86_64
 
 * 启动MySQL服务（CentOS7）
+
         shell> sudo systemctl start mysqld.service
         shell> sudo systemctl status mysqld.service   ### 检查启动状态
 
 * 初始化MySQL
+
         | 从5.7版本开始，Mysql默认初始化完成，并给root用户赋值一个随机的密码，用如下命令查看
         | shell> sudo grep 'temporary password' /var/log/mysqld.log
                 2018-08-08T13:10:28.194933Z 1 [Note] A temporary password is generated for root@localhost: 3p5QMqi(ySjT
@@ -130,6 +135,7 @@
         | mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql111!';  ## 密码必须要有大小写数字和特殊字符，长度>=8
 
 * 授权
+
         | mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'Mysql111!' WITH GRANT OPTION;
         | mysql> FLUSH PRIVILEGES;   ###刷新授权命令
 
