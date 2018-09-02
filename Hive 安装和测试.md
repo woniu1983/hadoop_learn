@@ -144,9 +144,11 @@
 
 * 将mysql的连接jar包拷贝到$HIVE_HOME/lib目录下
 * 配置hive-site.xml
+
         | cd /opt/hive/conf
         | cp hive-default.xml.template  hive-site.xml
         | vim hive-site.xml
+        ```
                 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                 <configuration>
                         <property>
@@ -166,6 +168,7 @@
                         <value>Mysql111!</value>
                         </property>
                 </configuration>
+        ```
 * 先启动hadoop或者启动HA集群
 * 启动hive
         * Hive2.1的启动需要先执行schematool命令进行初始化， 
