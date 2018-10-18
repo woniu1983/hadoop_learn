@@ -13,3 +13,17 @@ product表
 cageory表  
 select cageory_id,cageory_name from cas_category;
 [{"cageory_id":1,"cageory_name":"\u624b\u673a\u7c7b\u578b"},{"cageory_id":2,"cageory_name":"CDMA\u624b\u673a"},{"cageory_id":3,"cageory_name":"GSM\u624b\u673a"},{"cageory_id":4,"cageory_name":"3G\u624b\u673a"},{"cageory_id":5,"cageory_name":"\u53cc\u6a21\u624b\u673a"},{"cageory_id":6,"cageory_name":"\u624b\u673a\u914d\u4ef6"},{"cageory_id":7,"cageory_name":"\u5145\u7535\u5668"},{"cageory_id":8,"cageory_name":"\u8033\u673a"},{"cageory_id":9,"cageory_name":"\u7535\u6c60"},{"cageory_id":11,"cageory_name":"\u8bfb\u5361\u5668\u548c\u5185\u5b58\u5361"},{"cageory_id":12,"cageory_name":"\u5145\u503c\u5361"},{"cageory_id":13,"cageory_name":"\u5c0f\u7075\u901a\/\u56fa\u8bdd\u5145\u503c\u5361"},{"cageory_id":14,"cageory_name":"\u79fb\u52a8\u624b\u673a\u5145\u503c\u5361"},{"cageory_id":15,"cageory_name":"\u8054\u901a\u624b\u673a\u5145\u503c\u5361"}]
+
+
+
+=================================================
+db.product.find({cageory_id:{$ne:3}}, {product_id:1,product_name:1,_id:1}) // 后面的{}表示要显示的字段（1）， 0表示不需要显示，不写默认0不显示
+db.product.find({product_price:{$gt:300}}) // >300
+db.product.find({product_price:{$lte:100}}) // <= 100
+db.product.find({cageory_id:{$in:[4,11]}})  // 分类为4或者11的所有商品
+db.product.find({$and:[{product_price:{$gte:100}},{product_price:{$lte:500}}]}) // 100<=price<=500
+
+// 分类不为3，11的所有商品, and  nin  nor实现
+db.product.find({$and:[{cageory_id:{$ne:3}},{cageory_id:{$ne:11}}]}) 
+db.product.find({cageory_id:{$nin:[3,11]}})
+db.product.find({$nor:[{cageory_id:3},{cageory_id:11}]}) 
