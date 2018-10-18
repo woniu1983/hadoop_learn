@@ -24,3 +24,17 @@
         #source /etc/profile   //立即生效
 
 ------------------------------------------------------------------------
+
+## 四. 单个服务启动和使用
+
+        1. Damen服务启动   --fork --smallfiles
+        # cd /opt/mongodb
+        # mkdir 27017
+        # cd 27017
+        # mkdir data
+        # mongod --dbpath 27017/data --logpath 27017/log --smallfiles --fork --port 27017
+        
+        2. 连接
+        # mongo --port 27017
+        # >help   //查看命令
+        # >
