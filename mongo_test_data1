@@ -27,3 +27,12 @@ db.product.find({$and:[{product_price:{$gte:100}},{product_price:{$lte:500}}]}) 
 db.product.find({$and:[{cageory_id:{$ne:3}},{cageory_id:{$ne:11}}]}) 
 db.product.find({cageory_id:{$nin:[3,11]}})
 db.product.find({$nor:[{cageory_id:3},{cageory_id:11}]}) 
+
+// 100<p<300 || 4000<p<5000
+db.product.find({$or:[{$and:[{product_price:{$gt:100}},{product_price:{$lt:300}}]}, {$and:[{product_price:{$gt:4000}},{product_price:{$lt:5000}}]}]}) 
+
+// 
+db.product.find({product_id:{$mod:[5, 1]}})
+db.product.find({product_name:{$exists:1}})
+
+db.product.find({product_name:{$regex:/^三星*/}})
