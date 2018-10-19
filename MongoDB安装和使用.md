@@ -99,3 +99,11 @@
         # 6. 子文档索引 db.shop.ensureIndex({'spec.area':1})  // 子文档指的是子属性，使用.操作符访问
         # 7. 唯一索引： db.student.ensureIndex({sn:1}, {unique:true}) // 该字段的数值不能重复
         # 8. 稀疏索引： db.student.ensureIndex({name:1}, {sparse:true}) 如果不含该字段，则不建立索引；普通索引是将其值作为NULL建立索引的
+        # 9. Hash索引： db.student.ensureIndex({name:'hashed'}) 
+             - 缺点： 范围查询时，优化有限
+             - 优点： 比普通索引快
+             
+        # 使用B-树而不是B+树作为索引的原因：
+           B+树只有叶子节点才存储数据，每次的查询时间复杂度固定： LogN,查询到树的叶子节点；
+           B-树所有节点都包含有数据，查询复杂度<= LogN
+           MongoDB是文档型数据库，KV聚合，所以采用B-树反而更优；
