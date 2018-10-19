@@ -84,3 +84,18 @@
         - update--新值
         - options--附加条件
         #db.stu.update({name:'zhang'},{$set:{name:'songjiang'}})
+
+## 五. 游标Cursor
+        # 1. find() 返回的是一个Cursor游标
+        # 2. 如果不用var 修饰变量，则Cursor自动显示前20个
+        # 3. 如果使用了var，则不会自动显示
+        
+## 六. 索引Index
+        # 1. MongoDB的索引采用的是btree(B树或B-树，-不发音)， Mysql采用的是B+树
+        # 2. 创建索引 db.student.ensureIndex({sn:1})   // +1升序  -1降序
+        # 3. 查看索引 db.student.getIndexes()   // 查看索引
+        # 4. 删除索引 db.student.dropIndexes()  // 删除索引
+        # 5. 创建多索引 db.student.ensureIndex({sn:1, name:1})
+        # 6. 子文档索引 db.shop.ensureIndex({'spec.area':1})  // 子文档指的是子属性，使用.操作符访问
+        # 7. 唯一索引： db.student.ensureIndex({sn:1}, {unique:true}) // 该字段的数值不能重复
+        # 8. 稀疏索引： db.student.ensureIndex({name:1}, {sparse:true}) 如果不含该字段，则不建立索引；普通索引是将其值作为NULL建立索引的
