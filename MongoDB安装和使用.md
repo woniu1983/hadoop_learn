@@ -107,3 +107,11 @@
            B+树只有叶子节点才存储数据，每次的查询时间复杂度固定： LogN,查询到树的叶子节点；
            B-树所有节点都包含有数据，查询复杂度<= LogN
            MongoDB是文档型数据库，KV聚合，所以采用B-树反而更优；
+        
+## 七. 用户及认证
+        创建用户，且支持以下四种认证方式: 
+        参考： https://docs.mongodb.com/manual/tutorial/create-users/
+        # 1. UserName/Password
+        # 2. Kerberos
+        # 3. LDAP
+        # 4. x.509 Client Certificate
