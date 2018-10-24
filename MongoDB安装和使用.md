@@ -115,3 +115,24 @@
         # 2. Kerberos
         # 3. LDAP
         # 4. x.509 Client Certificate
+        
+## 八. 备份恢复        
+        # 1. 导出数据
+          > mongoexport -u root -p root --authenticationDatabase=admin  -d test -c aa -f name,age -o /export.json
+                参数说明：
+                -d ：数据库名
+                -c ：collection名
+                -o ：输出的文件名
+                --type ： 输出的格式，默认为json
+                -f ：输出的字段，如果-type为csv，则需要加上-f "字段名"
+          > 利用工具： Studio3T
+          
+        # 2. 导入数据
+          > mongoimport -d dbname -c collectionname --file filename --headerline --type json/csv -f field
+                参数说明：
+                    -d ：数据库名
+                    -c ：collection名
+                    --type ：导入的格式默认json
+                    -f ：导入的字段名
+                    --headerline ：如果导入的格式是csv，则可以使用第一行的标题作为导入的字段
+                    --file ：要导入的文件
