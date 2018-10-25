@@ -1,0 +1,25 @@
+# MongoDB 分片
+  - 参考阅读： http://www.runoob.com/mongodb/mongodb-sharding.html
+  
+# 分片涉及概念
+  三个主要组件：
+
+  ## Shard:
+    Replica set,数量：2+; 用于存储实际的数据块，实际生产环境中一个shard server角色可由几台机器组个一个replica set承担，防止主机单点故障
+
+  ## Config Server:
+    mongod实例，数量：1+; 存储了整个 ClusterMetadata，其中包括 chunk信息。
+
+  ## Query Routers:
+    mongos实例，数量：2+; 前端路由，客户端由此接入，且让整个集群看上去像单一数据库，前端应用可以透明使用。
+    
+# 分片实例
+  >Shard Server 1：27020
+  >Shard Server 2：27021
+  >Shard Server 3：27022
+  >Shard Server 4：27023
+  >Config Server ：27100
+  >Route Process ：40000
+  
+
+    
