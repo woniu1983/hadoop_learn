@@ -7,7 +7,9 @@
 # Replication模拟配置
   - 同一台机器上，开启 27017  27018  27019 三个端口，使用不同的配置文件启动，模拟三个MongoDB实例
   - YAML配置文件
+  
 	'''
+	
 		systemLog:
 		   destination: file
 		   path: "/opt/mongodb/log/27017.log"
@@ -28,6 +30,7 @@
 		   replSetName: "rsa"
 
 	'''
+	
   - 注意: log, data等文件夹必须提前创建好
   - 执行命令,开启三个MongoDB实例进程
 	./bin/mongod --config ./config/27017.conf
