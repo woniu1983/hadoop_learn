@@ -13,7 +13,7 @@
   ## Query Routers:
     mongos实例，数量：2+; 前端路由，客户端由此接入，且让整个集群看上去像单一数据库，前端应用可以透明使用。
     
-# 分片实例
+# 分片实例: 三台机器， 每台都创建以下server实例
   >Shard Server 1：27020
   >Shard Server 2：27021
   >Shard Server 3：27022
