@@ -193,7 +193,7 @@
 	
 
 # 添加待分片的库
-	>sh.enableSharding(databaseName);
+	>sh.enableSharding("databaseName");  ## 一定要加双引号
 	Enabling sharding for a database does not redistribute data but make it possible to shard the collections in that database.
 	
 # 添加待分片的表
