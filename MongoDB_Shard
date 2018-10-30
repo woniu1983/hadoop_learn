@@ -187,3 +187,14 @@
 		
 	Mongos会自动识别, 搜索并添加所有输入该replica set中的所有成员
 	分开加入各个Shard的Primary Shard，有利于数据的并行写入。
+	
+
+# 添加待分片的库
+	>sh.enableSharding(databaseName);
+	Enabling sharding for a database does not redistribute data but make it possible to shard the collections in that database.
+	
+# 添加待分片的表
+	>sh.shardCollection("<database>.<collection>", { <key> : <direction> } )
+	Such as: 
+ 	>sh.shardCollection( 'dbName.collectionName', {field:1} );
+
