@@ -14,12 +14,176 @@
     mongos实例，数量：2+; 前端路由，客户端由此接入，且让整个集群看上去像单一数据库，前端应用可以透明使用。
     
 # 分片实例: 三台机器， 每台都创建以下server实例
-  >Shard Server 1：27020
-  >Shard Server 2：27021
-  >Shard Server 3：27022
-  >Shard Server 4：27023
-  >Config Server ：27100
-  >Route Process ：40000
+  ## Config Server ：27100  三台组Replica Set: confrp
+  ## Route Process ：30000	三台
+  ## Shard Server 1：27020  三台组Replica Set
+  ## Shard Server 2：27021  三台组Replica Set
+  ## Shard Server 3：27022  三台组Replica Set
+  ## Shard Server 4：27023  三台组Replica Set
   
+----------------------------------------------------------------------------------------------------------------------------  
+# 配置一个Config Server Replica Set：三台组Replica Set: confrp
+  > 1. 配置文件， 三台
+	ha11> mongod --config configsvr.conf
+	ha22> mongod --config configsvr.conf
+	ha33> mongod --config configsvr.conf
+  
+  ```
+	
+	# Config Server 配置文件
+	# 启动： mongod --config <path-to-config-file>
+	sharding:
+	  clusterRole: configsvr   
+	replication:
+	  replSetName: confrp
+	net:
+	  bindIp: ha11.woniu.com
+	   port: 27100  
+	systemLog:
+	   destination: file
+	   path: "/opt/mongodb/log/27100.log"
+	   logAppend: true
+	storage:
+	   dbPath: "/opt/mongodb/data/27100" 
+	   mmapv1:
+		  smallFiles: true
+	   journal:
+		  enabled: true
+	processManagement:
+	   fork: true
+	replication:
+	   oplogSizeMB: 128
+	   replSetName: "rsa"
+  
+  ```
+  
+  > 2. 连上某一台 Config Server 
+	# mongo --host ha11.woniu.com --port 27100
+  
+  > 3. 初始化
+  
+  ```
+  
+	rs.initiate(
+	  {
+		_id: "confrp",
+		configsvr: true,
+		members: [
+		  { _id : 0, host : "ha11.woniu.com:27100" },
+		  { _id : 1, host : "ha11.woniu.com:27100" },
+		  { _id : 2, host : "ha11.woniu.com:27100" }
+		]
+	  }
+	)
+  
+  ```
+  
+  
+----------------------------------------------------------------------------------------------------------------------------  
+  
+ # 配置一个 Shard Server Replica Set：三台组Replica Set: shardrp
+  > 1. 配置文件， 三台
+	ha11> mongod --config shard1.conf
+	ha22> mongod --config shard1.conf
+	ha33> mongod --config shard1.conf
+  
+  ```
+	
+	# Shard Server 配置文件
+	# 启动： mongod --config <path-to-config-file>
+	sharding:
+		clusterRole: shardsvr   
+	replication:
+		oplogSizeMB: 128
+		replSetName: shardrp
+	net:
+		bindIp: ha11.woniu.com
+		port: 27020  
+	systemLog:
+		destination: file
+		path: "/opt/mongodb/log/27020.log"
+		logAppend: true
+	storage:
+		dbPath: "/opt/mongodb/data/27020" 
+		mmapv1:
+			smallFiles: true
+		journal:
+			enabled: true
+	processManagement:
+		fork: true
+  
+  ```
+  
+  > 2. 连上某一台 Config Server 
+	# mongo --host ha11.woniu.com --port 27020
+  
+  > 3. 初始化
+  
+  ```
+  
+	rs.initiate(
+	  {
+		_id: "shardrp",
+		configsvr: true,
+		members: [
+		  { _id : 0, host : "ha11.woniu.com:27020" },
+		  { _id : 1, host : "ha11.woniu.com:27020" },
+		  { _id : 2, host : "ha11.woniu.com:27020" }
+		]
+	  }
+	)
+  
+  ```
+  
+ # 按上面步骤，配置其他几个 Shard Server Replica Set 
 
-    
+----------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+ # 配置 Mongos Router
+  > 1. 配置文件
+	ha11> mongod --config mongosrouter.conf
+	ha22> mongod --config mongosrouter.conf
+	ha33> mongod --config mongosrouter.conf
+  
+  ```
+	
+	# Mongos Router 配置文件
+	# 启动： mongod --config <path-to-config-file>
+
+	sharding:
+		configDB: configsvr/ha11.woniu.com:27100, ha22.woniu.com:27100, ha33.woniu.com:27100   
+	net:
+		bindIp: ha11.woniu.com
+		port: 30000  
+	systemLog:
+		destination: file
+		path: "/opt/mongodb/log/30000.log"
+		logAppend: true
+	storage:
+		dbPath: "/opt/mongodb/data/30000" 
+		mmapv1:
+			smallFiles: true
+		journal:
+			enabled: true
+	processManagement:
+		fork: true
+  
+  ```
+  
+----------------------------------------------------------------------------------------------------------------------------
+
+ # 添加 Shard
+	刚配置好的Shard 集群中，Shard其实是空的。
+	可以使用mongo shell登录任意一个mongos 完成shard添加操作.
+	
+		ha11> mongo ha11.woniu.com:30000
+		
+		shard> sh.addShard( "shard1/ha11.woniu.com:27020" )
+		
+		shard> sh.addShard( "shard2/ha22.woniu.com:27021" )
+		
+		shard> sh.addShard( "shard3/ha33.woniu.com:27022" )
+		
+	Mongos会自动识别, 搜索并添加所有输入该replica set中的所有成员
+	分开加入各个Shard的Primary Shard，有利于数据的并行写入。
