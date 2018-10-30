@@ -19,7 +19,6 @@
   ## Shard Server 1：27020  三台组Replica Set
   ## Shard Server 2：27021  三台组Replica Set
   ## Shard Server 3：27022  三台组Replica Set
-  ## Shard Server 4：27023  三台组Replica Set
   
 ----------------------------------------------------------------------------------------------------------------------------  
 # 配置一个Config Server Replica Set：三台组Replica Set: confrp
