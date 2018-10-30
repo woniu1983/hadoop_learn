@@ -133,12 +133,11 @@
   
 	rs.initiate(
 	  {
-		_id: "shardrp",
-		configsvr: true,
+		_id: "shard1",   ## 初始化不同的shard时 这里的名称需要对于修改哦
 		members: [
-		  { _id : 0, host : "ha11.woniu.com:27020" },
-		  { _id : 1, host : "ha22.woniu.com:27020" },
-		  { _id : 2, host : "ha33.woniu.com:27020" }
+		  { _id : 0, host : "ha11.woniu.com:27020" },  ## 这里也要对应修改host和port哦
+		  { _id : 1, host : "ha22.woniu.com:27020" },  ## 这里也要对应修改host和port哦
+		  { _id : 2, host : "ha33.woniu.com:27020" }   ## 这里也要对应修改host和port哦
 		]
 	  }
 	)
