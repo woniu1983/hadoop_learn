@@ -151,9 +151,9 @@
  
  # 配置 Mongos Router
   > 1. 配置文件
-	ha11> mongod --config mongosrouter.conf
-	ha22> mongod --config mongosrouter.conf
-	ha33> mongod --config mongosrouter.conf
+	ha11> mongos --config mongosrouter.conf
+	ha22> mongos --config mongosrouter.conf
+	ha33> mongos --config mongosrouter.conf
   
   ```
 	
@@ -161,7 +161,7 @@
 	# 启动： mongod --config <path-to-config-file>
 
 	sharding:
-		configDB: configsvr/ha11.woniu.com:27100, ha22.woniu.com:27100, ha33.woniu.com:27100   
+		configDB: confrp/ha11.woniu.com:27100,ha22.woniu.com:27100,ha33.woniu.com:27100 #最好不要带空格
 	net:
 		bindIp: ha11.woniu.com    #三台机器, 需要修改hostname,然后执行
 		port: 30000  
@@ -169,12 +169,6 @@
 		destination: file
 		path: "/opt/mongodb/log/30000.log"
 		logAppend: true
-	storage:
-		dbPath: "/opt/mongodb/data/30000" 
-		mmapv1:
-			smallFiles: true
-		journal:
-			enabled: true
 	processManagement:
 		fork: true
   
