@@ -37,7 +37,7 @@
 	replication:
 	  replSetName: confrp
 	net:
-	  bindIp: ha11.woniu.com
+	  bindIp: ha11.woniu.com   #三台机器, 需要修改hostname,然后执行
 	   port: 27100  
 	systemLog:
 	   destination: file
@@ -97,7 +97,7 @@
 		oplogSizeMB: 128
 		replSetName: shardrp
 	net:
-		bindIp: ha11.woniu.com
+		bindIp: ha11.woniu.com    #三台机器, 需要修改hostname,然后执行
 		port: 27020  
 	systemLog:
 		destination: file
@@ -154,7 +154,7 @@
 	sharding:
 		configDB: configsvr/ha11.woniu.com:27100, ha22.woniu.com:27100, ha33.woniu.com:27100   
 	net:
-		bindIp: ha11.woniu.com
+		bindIp: ha11.woniu.com    #三台机器, 需要修改hostname,然后执行
 		port: 30000  
 	systemLog:
 		destination: file
