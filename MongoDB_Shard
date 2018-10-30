@@ -70,8 +70,8 @@
 		configsvr: true,
 		members: [
 		  { _id : 0, host : "ha11.woniu.com:27100" },
-		  { _id : 1, host : "ha11.woniu.com:27100" },
-		  { _id : 2, host : "ha11.woniu.com:27100" }
+		  { _id : 1, host : "ha22.woniu.com:27100" },
+		  { _id : 2, host : "ha33.woniu.com:27100" }
 		]
 	  }
 	)
@@ -127,8 +127,8 @@
 		configsvr: true,
 		members: [
 		  { _id : 0, host : "ha11.woniu.com:27020" },
-		  { _id : 1, host : "ha11.woniu.com:27020" },
-		  { _id : 2, host : "ha11.woniu.com:27020" }
+		  { _id : 1, host : "ha22.woniu.com:27020" },
+		  { _id : 2, host : "ha33.woniu.com:27020" }
 		]
 	  }
 	)
