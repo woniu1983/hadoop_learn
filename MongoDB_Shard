@@ -22,6 +22,13 @@
   
 ----------------------------------------------------------------------------------------------------------------------------  
 # 配置一个Config Server Replica Set：三台组Replica Set: confrp
+  >0 准备下相关的文件夹,参考如下， 三台机器上都执行
+     ha11> cd /opt/mongodb
+     ha11> mkdir config data log     # config, data 和 log 目录
+     ha11> cd data
+     ha11> mkdir 27100 30000 27020 27021 27022   # data下相关的目录
+     
+  
   > 1. 配置文件， 三台
 	ha11> mongod --config configsvr.conf
 	ha22> mongod --config configsvr.conf
