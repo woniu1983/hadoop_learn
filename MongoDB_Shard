@@ -124,7 +124,7 @@
   
   ```
   
-  > 2. 连上某一台 Config Server 
+  > 2. 连上某一台 Shard Server 
 	# mongo --host ha11.woniu.com --port 27020
   
   > 3. 初始化
