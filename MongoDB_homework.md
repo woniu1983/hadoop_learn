@@ -1,3 +1,4 @@
+```
 
 var map1 = function() {
 	for (var idx = 0; idx < this.items.length; idx++) {
@@ -30,7 +31,7 @@ var reduce1 = function(key, values) {
 
 	 return reducedVal;
 };
-	
+
 
 db.collection.mapReduce(
    map1,  
@@ -40,3 +41,5 @@ db.collection.mapReduce(
       query: { $and: [ this.jingdi:{$ge:73.66}, this.jingdi:{$le:135.05}, this.weidu:{$ge:3.86}, this.weidu:{$le:53.55} ] },
    }
 );
+
+```
