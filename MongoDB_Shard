@@ -158,7 +158,7 @@
   ```
 	
 	# Mongos Router 配置文件
-	# 启动： mongod --config <path-to-config-file>
+	# 启动： mongos --config <path-to-config-file>
 
 	sharding:
 		configDB: confrp/ha11.woniu.com:27100,ha22.woniu.com:27100,ha33.woniu.com:27100 #最好不要带空格
