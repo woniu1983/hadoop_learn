@@ -2,6 +2,10 @@
 # 导入数据
   > mongoimport --host ha11.woniu.com --port 30000 --db test --collection eq --type csv --headerline --ignoreBlanks --file /home/hadoop/download/data.csv
 
+ # db.printShardingStatus()
+
+---------------------------------------------------------------------------
+
 var map1 = function() {
 	for (var idx = 0; idx < this.items.length; idx++) {
 	   var month = this.items[idx].date.substring(0, 7);
